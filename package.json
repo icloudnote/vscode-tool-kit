@@ -1,8 +1,9 @@
 {
   "name": "devops-kit",
+  "publisher": "icloudnote-admin",
   "displayName": "devops-kit",
   "description": "开发项目必备工具集",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.108.1"
   },

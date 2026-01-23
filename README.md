@@ -1,71 +1,44 @@
-# devops-kit README
+# devops-kit
 
-This is the README for your extension "devops-kit". After writing up a brief description, we recommend including the following sections.
+devops-kit 是一个帮助开发者与运维团队提高日常工作效率的 VS Code 扩展集合。它提供若干实用的命令与工具，用于常见的 DevOps 任务自动化与快速导航。
 
-## Features
+## 主要功能
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- 快速执行常用 DevOps 命令（示例：构建、打包、查看日志）。
+- 在工作区内快速跳转到 DevOps 相关文件与脚本。
+- 提供可配置的任务模板与提示，方便在 CI/CD 中复用。
 
-For example if there is an image subfolder under your extension project workspace:
+## 安装
 
-\!\[feature X\]\(images/feature-x.png\)
+- 从源码安装（开发）：
+  1.  安装依赖：`pnpm install` 或 `npm install`
+  2.  编译：`pnpm run compile` 或 `npm run compile`
+  3.  在 VS Code 中按 `F5` 启动扩展调试窗口
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- 打包为 VSIX：
+  1.  确保编辑并保存了本项目的 `README.md`（本文件）
+  2.  运行：`vsce package`
 
-## Requirements
+## 使用示例
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- 在命令面板（`Cmd+Shift+P`）中输入 `Devops: ` 可查看本扩展提供的所有命令。
+- 常见命令：
+  - `Devops: Run Build` — 在当前工作区触发构建脚本。
+  - `Devops: Open Logs` — 打开常用日志文件或日志目录。
 
-## Extension Settings
+（注：具体命令以 `package.json` 中的 `contributes.commands` 为准。）
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## 配置
 
-For example:
+如有扩展设置，会在 `package.json` 的 `contributes.configuration` 中声明。常见配置项示例：
 
-This extension contributes the following settings:
+- `devopsKit.defaultShell`：指定运行脚本时使用的 shell（默认 `/bin/zsh`）。
+- `devopsKit.logPaths`：日志路径数组，用于 `Open Logs` 命令。
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## 贡献
 
-## Known Issues
+欢迎提交 Issue 或 PR。贡献前请先阅读贡献指南并确保代码风格一致。
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## 许可证
 
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+本项目遵循 MIT 许可证，详见 LICENSE 文件。
