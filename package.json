@@ -1,7 +1,7 @@
 {
-  "name": "devops-kit",
+  "name": "tool-kit",
   "publisher": "icloudnote-admin",
-  "displayName": "devops-kit",
+  "displayName": "tool-kit",
   "description": "开发项目必备工具集",
   "version": "1.0.0",
   "engines": {
@@ -34,7 +34,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "devops-kit.helloWorld",
+        "command": "tool-kit.helloWorld",
         "title": "Hello World"
       }
     ]
