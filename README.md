@@ -1,44 +1,51 @@
 # tool-kit
 
-tool-kit 是一个帮助开发者与运维团队提高日常工作效率的 VS Code 扩展集合。它提供若干实用的命令与工具，用于常见的 DevOps 任务自动化与快速导航。
+**tool-kit** 是一个为开发者和运维工程师精心挑选的 VS Code 扩展包 (Extension Pack)。它集成了日常开发 (Golang, Frontend) 和 DevOps (Terraform, Cloud) 工作流中必不可少的工具，旨在帮助团队统一开发环境，提高工作效率。
 
-## 主要功能
+## 包含的扩展
 
-- 快速执行常用 DevOps 命令（示例：构建、打包、查看日志）。
-- 在工作区内快速跳转到 DevOps 相关文件与脚本。
-- 提供可配置的任务模板与提示，方便在 CI/CD 中复用。
+安装此扩展包将自动安装以下工具：
 
-## 安装
+### 🛠️ 语言与框架支持
 
-- 从源码安装（开发）：
-  1.  安装依赖：`pnpm install` 或 `npm install`
-  2.  编译：`pnpm run compile` 或 `npm run compile`
-  3.  在 VS Code 中按 `F5` 启动扩展调试窗口
+- **Go** (`golang.go`): 官方 Go 语言支持，提供智能感知、调试等功能。
+- **Terraform** (`hashicorp.terraform`): HashiCorp 官方 Terraform 支持。
+- **HCL** (`hashicorp.hcl`): HCL 语言高亮与语法支持。
+- **YAML** (`redhat.vscode-yaml`): 全面的 YAML 语言支持。
+- **Protobuf** (`drblury.protobuf-vsc`): Protocol Buffers 语法高亮。
+- **SaltStack** (`korekontrol.saltstack`): SaltStack 语法高亮与代码片段。
 
-- 打包为 VSIX：
-  1.  确保编辑并保存了本项目的 `README.md`（本文件）
-  2.  运行：`vsce package`
+### 🚀 生产力与代码质量
 
-## 使用示例
+- **Prettier** (`esbenp.prettier-vscode`): 固执己见的代码格式化工具。
+- **Oxc** (`oxc.oxc-vscode`): 高性能的 JavaScript/TypeScript 工具链。
+- **Vim** (`vscodevim.vim`): 为 VS Code 提供 Vim 模拟。
+- **Project Manager** (`alefragnani.project-manager`): 轻松切换与管理多个项目。
 
-- 在命令面板（`Cmd+Shift+P`）中输入 `Devops: ` 可查看本扩展提供的所有命令。
-- 常见命令：
-  - `Devops: Run Build` — 在当前工作区触发构建脚本。
-  - `Devops: Open Logs` — 打开常用日志文件或日志目录。
+### 🌳 Git 与版本控制
 
-（注：具体命令以 `package.json` 中的 `contributes.commands` 为准。）
+- **GitLens** (`eamodio.gitlens`): 增强 VS Code 内置的 Git 功能。
+- **Git Graph** (`mhutchie.git-graph`): 查看 Git 提交历史的图形化界面。
+- **GitHub Local Actions** (`sanjulaganepola.github-local-actions`): 在本地运行 GitHub Actions。
+
+### ☁️ 远程开发与运维
+
+- **Remote - SSH** (`ms-vscode-remote.remote-ssh`): 通过 SSH 连接到远程服务器进行开发。
+- **Remote Explorer** (`ms-vscode.remote-explorer`): 远程资源管理器。
+- **SOPS** (`signageos.signageos-vscode-sops`): 编辑 SOPS 加密文件。
+
+## 使用说明
+
+安装本扩展包后，上述所有扩展将作为依赖项自动安装。如果想要卸载某个特定扩展，可以单独禁用或卸载它，但建议保留以获得最佳体验。
 
 ## 配置
 
-如有扩展设置，会在 `package.json` 的 `contributes.configuration` 中声明。常见配置项示例：
-
-- `devopsKit.defaultShell`：指定运行脚本时使用的 shell（默认 `/bin/zsh`）。
-- `devopsKit.logPaths`：日志路径数组，用于 `Open Logs` 命令。
+本扩展包本身无需额外配置。各个子扩展的配置（如 `go.gopath`, `prettier.printWidth` 等）请参考各自的官方文档进行设置。
 
 ## 贡献
 
-欢迎提交 Issue 或 PR。贡献前请先阅读贡献指南并确保代码风格一致。
+欢迎通过 Issue 提交反馈或建议添加新的实用扩展。
 
 ## 许可证
 
-本项目遵循 MIT 许可证，详见 LICENSE 文件。
+MIT License
