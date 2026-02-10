@@ -3,14 +3,14 @@
   "publisher": "icloudnote",
   "displayName": "tool-kit",
   "description": "开发项目必备工具集",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/icloudnote/tool-kit.git"
   },
   "engines": {
-    "vscode": "^1.108.1"
+    "vscode": "^1.95.0"
   },
   "categories": [
     "Extension Packs"
@@ -52,17 +52,26 @@
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "package": "mkdir -p dist && vsce package --no-dependencies --out dist",
-    "publish": "vsce publish --no-dependencies"
+    "package": "pnpm run package:vsce",
+    "package:vsce": "mkdir -p dist && vsce package --no-dependencies --out dist",
+    "publish": "pnpm run publish:vsce && pnpm run publish:ovsx",
+    "publish:vsce": "dotenv -e .env -- bash -c 'vsce publish --no-dependencies -p \"$VSCE_TOKEN\"'",
+    "publish:ovsx": "dotenv -e .env -- bash -c 'ovsx publish --no-dependencies -p \"$OVSX_TOKEN\"'"
   },
   "devDependencies": {
-    "@types/vscode": "^1.108.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.52.0",
-    "eslint": "^9.39.2",
-    "typescript": "^5.9.3",
+    "@types/vscode": "^1.95.0",
     "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.7.1",
+    "dotenv-cli": "^7.4.2",
+    "eslint": "^9.39.2",
+    "ovsx": "^0.10.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.52.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.4"
   }
 }
