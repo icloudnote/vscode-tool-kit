@@ -1,0 +1,100 @@
+name: Auto-Merge
+on:
+  pull_request_target:
+  # pull_request:
+
+env:
+  TZ: Asia/Shanghai
+  PKG_NAME: React-Admin
+  APP_NAME: auto-merge
+  BARK_SOUND: shake
+  BARK_LEVEL: active
+  BARK_GROUP: GitHub Action
+  BARK_ICON: https://static.icloudnote.cn/logo/github.png
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: |
+      (github.actor == 'dependabot[bot]' || github.actor == 'icloudnote') &&
+      github.event.pull_request.base.ref == 'master'
+    steps:
+      # 获取 dependabot 元信息
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Prepare Metadata
+        id: vars
+        run: |
+          echo "DETAIL_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          # 获取 PR 的最新提交信息（从 GitHub 事件上下文中直接获取更可靠）
+          echo "APP_COMMIT=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
+      # 获取 dependabot 详细信息
+      - name: Dependabot metadata
+        id: metadata
+        if: github.actor == 'dependabot[bot]'
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      # 检查是否为 vscode 引擎更新
+      - name: Check if vscode engine update
+        id: check_vscode
+        run: |
+          # 检查 PR 标题或文件变更是否涉及 vscode 引擎
+          if echo "${{ github.event.pull_request.title }}" | grep -i "engines.*vscode" || \
+             git diff origin/${{ github.event.pull_request.base.ref }}...HEAD -- package.json | grep -A2 -B2 '"engines"' | grep -i '"vscode"'; then
+            echo "is_vscode_update=true" >> $GITHUB_OUTPUT
+            echo "检测到 vscode 引擎更新，跳过自动合并"
+          else
+            echo "is_vscode_update=false" >> $GITHUB_OUTPUT
+          fi
+      # 启用自动合并并自动删除分支
+      - name: Enable auto-merge for Dependabot PRs
+        if: steps.check_vscode.outputs.is_vscode_update != 'true'
+        run: gh pr merge --auto --rebase --delete-branch "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 添加标签提示手动审查
+      - name: Label vscode engine updates
+        if: steps.check_vscode.outputs.is_vscode_update == 'true'
+        run: |
+          gh pr edit "$PR_URL" --add-label "needs-manual-review" --add-label "vscode-engine"
+          gh pr comment "$PR_URL" --body "⚠️ 此 PR 涉及 VSCode 引擎版本更新，需要手动审查以确保兼容性。"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Bark 成功通知
+      - name: Notification Success
+        uses: harryzcy/action-bark@v2.3.1
+        if: success()
+        with:
+          status: ${{ job.status }}
+          title: "🚀 ${{ env.PKG_NAME }} 自动合并成功"
+          body: "应用: ${{ env.APP_NAME }}\n内容: ${{ env.APP_COMMIT }}\n时间: ${{ env.DETAIL_TIME }}"
+          level: active
+          icon: ${{ env.BARK_ICON }}
+          sound: ${{ env.BARK_SOUND }}
+          group: ${{ env.BARK_GROUP }}
+          device_key: ${{ secrets.BARK_DEVICE_KEY }}
+          bark_server_url: ${{ secrets.BARK_SERVER_URL }}
+      # Bark 失败通知
+      - name: Notification Failure
+        uses: harryzcy/action-bark@v2.3.1
+        if: failure()
+        with:
+          status: ${{ job.status }}
+          title: "❌ ${{ env.PKG_NAME }} 自动合并失败"
+          body: "应用: ${{ env.APP_NAME }}\n内容: ${{ env.APP_COMMIT }}\n时间: ${{ env.DETAIL_TIME }}"
+          level: critical
+          icon: ${{ env.BARK_ICON }}
+          sound: ${{ env.BARK_SOUND }}
+          group: ${{ env.BARK_GROUP }}
+          device_key: ${{ secrets.BARK_DEVICE_KEY }}
+          bark_server_url: ${{ secrets.BARK_SERVER_URL }}

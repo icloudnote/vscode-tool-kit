@@ -1,0 +1,91 @@
+name: Tool-Kit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+env:
+  TZ: Asia/Shanghai
+  PKG_NAME: VSCode-Tool-Kit
+  APP_NAME: VSCode-Tool-Kit
+  IMAGE_NAME: VSCode-Tool-Kit
+  BARK_SOUND: shake
+  BARK_LEVEL: active
+  BARK_GROUP: GitHub Action
+  BARK_ICON: https://static.icloudnote.cn/logo/github.png
+
+jobs:
+  buildx:
+    runs-on: ubuntu-latest
+    steps:
+      # 获取代码
+      - name: Checkout
+        uses: actions/checkout@v6
+      # 添加 ssh 私钥
+      - uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      # 设置 git 信息
+      - name: Set up Git
+        run: |
+          git config --global url."git@github.com:icloudnote/".insteadOf "https://github.com/icloudnote/"
+          git config user.name changjun
+          git config user.email changjun.zcj@gmail.com
+      # 获取当前时间
+      - name: Get current date
+        id: date
+        run: |
+          echo "DETAIL_TIME=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "APP_COMMIT=$(git log -1 --no-merges --pretty=%s)" >> $GITHUB_ENV
+      # 设置 PNPM 版本
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      # 设置 Node 版本
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+      # 获取依赖
+      - name: Get dependencies
+        run: pnpm install --frozen-lockfile
+      # Linter
+      - name: Linter
+        run: pnpm run lint
+      # 编译
+      - name: Build
+        run: pnpm run build
+      # 打包程序
+      - name: Package
+        run: pnpm run package
+      # Bark 成功通知
+      - name: Notification Success
+        uses: harryzcy/action-bark@v2.3.1
+        if: success()
+        with:
+          status: ${{ job.status }}
+          title: "🚀 ${{ env.PKG_NAME }} 构建成功"
+          body: "应用: ${{ env.APP_NAME }}\n内容: ${{ env.APP_COMMIT }}\n时间: ${{ env.DETAIL_TIME }}"
+          level: active
+          icon: ${{ env.BARK_ICON }}
+          sound: ${{ env.BARK_SOUND }}
+          group: ${{ env.BARK_GROUP }}
+          device_key: ${{ secrets.BARK_DEVICE_KEY }}
+          bark_server_url: ${{ secrets.BARK_SERVER_URL }}
+      # Bark 失败通知
+      - name: Notification Failure
+        uses: harryzcy/action-bark@v2.3.1
+        if: failure()
+        with:
+          status: ${{ job.status }}
+          title: "❌ ${{ env.PKG_NAME }} 构建失败"
+          body: "应用: ${{ env.APP_NAME }}\n内容: ${{ env.APP_COMMIT }}\n时间: ${{ env.DETAIL_TIME }}"
+          level: critical
+          icon: ${{ env.BARK_ICON }}
+          sound: ${{ env.BARK_SOUND }}
+          group: ${{ env.BARK_GROUP }}
+          device_key: ${{ secrets.BARK_DEVICE_KEY }}
+          bark_server_url: ${{ secrets.BARK_SERVER_URL }}
