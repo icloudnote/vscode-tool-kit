@@ -72,7 +72,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Bark 成功通知
       - name: Notification Success
-        uses: harryzcy/action-bark@v2.3.1
+        uses: harryzcy/action-bark@v2.3.2
         if: success()
         with:
           status: ${{ job.status }}
@@ -86,7 +86,7 @@ jobs:
           bark_server_url: ${{ secrets.BARK_SERVER_URL }}
       # Bark 失败通知
       - name: Notification Failure
-        uses: harryzcy/action-bark@v2.3.1
+        uses: harryzcy/action-bark@v2.3.2
         if: failure()
         with:
           status: ${{ job.status }}
