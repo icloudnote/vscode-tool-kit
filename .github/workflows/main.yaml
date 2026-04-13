@@ -40,7 +40,7 @@ jobs:
           echo "DETAIL_TIME=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
           echo "APP_COMMIT=$(git log -1 --no-merges --pretty=%s)" >> $GITHUB_ENV
       # 设置 PNPM 版本
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
         with:
           version: 10
       # 设置 Node 版本
